@@ -1,8 +1,10 @@
+import CubeImageDisplay from "@/components/CubeImageDisplay/CubeImageDisplay"
+
 
 export default function Page() {
   return (
-    <div>
-      Homepage
-    </div>
+    <main>
+      <CubeImageDisplay/>
+    </main>
   ) 
 }
