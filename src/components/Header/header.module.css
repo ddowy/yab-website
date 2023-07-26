@@ -12,7 +12,7 @@
 }
 .nav {
     background-color: #4b5785;
-    box-shadow: 0px -7px 15px 7px #4b5785;
+    box-shadow: 0px -7px 15px 7px #4b5785, 0px 7px 15px 7px #4b5785;
     position: relative;
 }
 .navul {
@@ -27,6 +27,7 @@
 }
 .link {
     color: rgb(209, 206, 206);
+    font-size: 1.25rem;
 }
 .link:last-child {
     margin-right: 10px;
