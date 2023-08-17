@@ -31,7 +31,7 @@ export default function Canvas({nextBtnRef, prevBtnRef}) {
                 this._animations = {}
                 
                 this._LoadModel()
-                
+
                 // CANVAS CHARACTERISTICS
                 
                 this._scene.background = new THREE.Color(0x1b264f)
@@ -44,7 +44,6 @@ export default function Canvas({nextBtnRef, prevBtnRef}) {
                 prevBtnRef.current.addEventListener('click', () => {
                     this._UpdateAnimation('prev')
                 })
-
                 window.addEventListener('resize', () => {
                     this._OnWindowResize()
                 })
@@ -59,6 +58,7 @@ export default function Canvas({nextBtnRef, prevBtnRef}) {
                     this._cube.position.set(-1, -1, 0)
                     this._mixer = new THREE.AnimationMixer(this._cube)
                     this._scene.add(this._cube)
+                    this._CubeDisplayAdjusment(this._cube)
 
                     gltf.animations.forEach(animation => {
                         this._animations[animation.name] = this._mixer.clipAction(animation)
@@ -115,8 +115,44 @@ export default function Canvas({nextBtnRef, prevBtnRef}) {
 
                 mixer.addEventListener('finished', this._cb);
             }
+            
+            _ScaleCube() {
+
+                // cube, camera, relativeZ = null
+
+                const cameraZ = relativeZ !== null ? relativeZ : camera.position.z;
+                const distance = cameraZ - cube.position.z;
+                const vFov = camera.fov * Math.PI / 180;
+                const scaleY = 2 * Math.tan(vFov / 2) * distance;
+                const scaleX = scaleY * camera.aspect;
+                cube.scale.set(scaleX, scaleY, scaleY);
+            }
+
+            _CubeDisplayAdjusment(cube) {
+                const windowWidth = window.innerWidth
+
+                if (windowWidth < 650) {
+                    cube.scale.set(.65, .65, .65)
+                    cube.position.set(0, -.25, 0)
+                    nextBtnRef.current.style.height = '30px'
+                    nextBtnRef.current.style.paddingTop = '250px'
+                    prevBtnRef.current.style.height = '30px'
+                    prevBtnRef.current.style.paddingTop = '250px'
+                } else if (windowWidth < 950) {
+                    cube.scale.set(.85, .85, .85)
+                    cube.position.set(-.5, -.75, 0)
+                    nextBtnRef.current.style.paddingTop = ''
+                    prevBtnRef.current.style.paddingTop = ''
+                } else {
+                    cube.scale.set(1, 1, 1)
+                    cube.position.set(-1, -1, 0)
+                    nextBtnRef.current.style.height = ''
+                    prevBtnRef.current.style.height = ''
+                }
+            }
 
             _OnWindowResize() {
+                this._CubeDisplayAdjusment(this._cube)
                 this._camera.aspect = canvasParentRef.current.clientWidth / canvasParentRef.current.clientHeight;
                 this._camera.updateProjectionMatrix();
                 
